@@ -106,5 +106,5 @@ id_pred = pd.DataFrame(
                 ypred.reshape(-1, 1)), axis=1), 
                 columns=["PassengerId", "Survived"]
                 )
-id_pred.to_csv('output/mycsvfile.csv', index=False)
+id_pred.to_csv('output/predictions.csv', index=False)
 

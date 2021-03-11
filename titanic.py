@@ -23,8 +23,9 @@ df_ndim = train_data.ndim
 print("\n.............Training Data EA ...............\nDataframe size and shape:")
 print("-------------")
 print("Size = {}\nShape ={}\nShape[0] x Shape[1] = {}".format(
-        size, shape, shape[0]*shape[1]
-        )) 
+    size, shape, shape[0]*shape[1]
+    )
+) 
 
 #printing ndim 
 print("ndim of dataframe = {}\n".format(df_ndim))
@@ -53,18 +54,24 @@ print("-------------")
 print("Numerical:\n", numeric_features, "\n")
 print("Categorical:\n", categorical_features, "\n")
 
-numeric_transformer = Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='median')),
-    ('scaler', StandardScaler())
-    ])
-categorical_transformer = Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='most_frequent')),
-    ('onehot', OneHotEncoder(handle_unknown='ignore'))
-    ])
-preprocessor = ColumnTransformer(transformers=[
-    ('num', numeric_transformer, numeric_features),
-    ('cat', categorical_transformer, categorical_features)
-    ]) 
+numeric_transformer = Pipeline(
+    steps=[
+        ('imputer', SimpleImputer(strategy='median')),
+        ('scaler', StandardScaler())
+    ]
+)
+categorical_transformer = Pipeline(
+    steps=[
+        ('imputer', SimpleImputer(strategy='most_frequent')),
+        ('onehot', OneHotEncoder(handle_unknown='ignore'))
+    ]
+)
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ]
+) 
 
 print("\nData Imputer and Variable Transformers using Pipeline:")
 print("-------------")
@@ -78,42 +85,47 @@ classifiers = [
     GaussianNB(),
     LogisticRegression(solver='lbfgs'),
     KNeighborsClassifier(n_neighbors=10) 
-    ]
+]
 for classifier in classifiers:
-    pipe = Pipeline(steps=[
-               ('preprocessor', preprocessor),
-               ('classifier', classifier)
-               ])
+    pipe = Pipeline(
+        steps=[
+            ('preprocessor', preprocessor),
+            ('classifier', classifier)
+        ]
+    )
     scores = cross_val_score(pipe, X, y, cv=5)
     print("\n", classifier)
     print('''
-          CV mean score {:0.2f}%
-          CV std {:0.2f}% 
-          CV max score {:05.2f}% 
-          CV min score {:05.2f}%'''.format(
-              scores.mean()*100,
-              scores.std(ddof=1)*100,
-              scores.max()*100,
-              scores.min()*100
-              ))
+        CV mean score {:0.2f}%
+        CV std {:0.2f}% 
+        CV max score {:05.2f}% 
+        CV min score {:05.2f}%'''.format(
+            scores.mean()*100,
+            scores.std(ddof=1)*100,
+            scores.max()*100,
+            scores.min()*100
+        )
+    )
     print("--------------------------------------------")
 
 ################## Fitting Model on Test Data and Predictions #################
 #Fitting All Training Data and Predicting on Test Data
 Xtest = test_data.drop(["PassengerId", 'Name', 'Ticket', 'Cabin'], axis=1)
 Id = test_data["PassengerId"]
-pipe = Pipeline(steps=[
-                   ('preprocessor', preprocessor),
-                   ('KNN_10', KNeighborsClassifier(n_neighbors=10))
-                   ])
+pipe = Pipeline(
+    steps=[
+        ('preprocessor', preprocessor),
+        ('KNN_10', KNeighborsClassifier(n_neighbors=10))
+    ]
+)
 pipe.fit(X, y)
 ypred = pipe.predict(Xtest)
 
 #Formatting predictions and creating output file
 id_pred = pd.DataFrame(
-                np.concatenate((Id.values.reshape(-1, 1), 
-                ypred.reshape(-1, 1)), axis=1), 
-                columns=["PassengerId", "Survived"]
-                )
+    np.concatenate((Id.values.reshape(-1, 1), 
+    ypred.reshape(-1, 1)), axis=1), 
+    columns=["PassengerId", "Survived"]
+)
 id_pred.to_csv('output/predictions.csv', index=False)
 

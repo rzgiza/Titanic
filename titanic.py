@@ -43,12 +43,12 @@ print(train_data.info())
 ######################### Feature Engineering #################################
 X = train_data.drop(["PassengerId", "Survived", 'Name', 'Ticket', 'Cabin'], axis=1)
 y = train_data["Survived"]
-X["Pclass"] = X["Pclass"].astype(str) #changing Pclass to categorical varaible
+X["Pclass"] = X["Pclass"].astype(str)
 
 numeric_features = X.select_dtypes(include=['int64', 'float64']).columns
 categorical_features = X.select_dtypes(include=['object']).columns
 print("\n.............Varaible Selection...............")
-print("\nIncluded Variables Info:")
+print("\nSelected Variables:")
 print("-------------")
 print("Numerical:\n", numeric_features, "\n")
 print("Categorical:\n", categorical_features, "\n")
@@ -66,6 +66,12 @@ preprocessor = ColumnTransformer(transformers=[
     ('cat', categorical_transformer, categorical_features)
     ]) 
 
+print("\nData Imputer and Variable Transformers using Pipeline:")
+print("-------------")
+print("\n[Numerical Variables]:\n")
+print(numeric_transformer)
+print("\n[Categorical Variables]:\n")
+print(categorical_transformer)
 ########################## Model Selection ####################################
 print("\n.............Model Selection using Pipeline...............")
 classifiers = [
@@ -80,14 +86,17 @@ for classifier in classifiers:
                ])
     scores = cross_val_score(pipe, X, y, cv=5)
     print("\n", classifier)
-    print('''CV mean score {:0.2f}% | CV std {:0.2f}% | CV max score {:05.2f}% 
-          | CV min score {:05.2f}%'''
-          .format(
+    print('''
+          CV mean score {:0.2f}%
+          CV std {:0.2f}% 
+          CV max score {:05.2f}% 
+          CV min score {:05.2f}%'''.format(
               scores.mean()*100,
               scores.std(ddof=1)*100,
               scores.max()*100,
               scores.min()*100
               ))
+    print("--------------------------------------------")
 
 ################## Fitting Model on Test Data and Predictions #################
 #Fitting All Training Data and Predicting on Test Data

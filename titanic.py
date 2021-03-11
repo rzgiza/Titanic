@@ -79,6 +79,7 @@ print("\n[Numerical Variables]:\n")
 print(numeric_transformer)
 print("\n[Categorical Variables]:\n")
 print(categorical_transformer)
+
 ########################## Model Selection ####################################
 print("\n.............Model Selection using Pipeline...............")
 classifiers = [

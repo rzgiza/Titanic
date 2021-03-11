@@ -42,12 +42,12 @@ print("-------------")
 print(train_data.info())
 
 ######################### Feature Engineering #################################
-X = train_data.drop(["PassengerId", "Survived", 'Name', 'Ticket', 'Cabin'], axis=1)
+X = train_data.drop(["PassengerId", "Survived", "Name", "Ticket", "Cabin"], axis=1)
 y = train_data["Survived"]
 X["Pclass"] = X["Pclass"].astype(str)
 
-numeric_features = X.select_dtypes(include=['int64', 'float64']).columns
-categorical_features = X.select_dtypes(include=['object']).columns
+numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
+categorical_features = X.select_dtypes(include=["object"]).columns
 print("\n.............Varaible Selection...............")
 print("\nSelected Variables:")
 print("-------------")
@@ -62,14 +62,14 @@ numeric_transformer = Pipeline(
 )
 categorical_transformer = Pipeline(
     steps=[
-        ('imputer', SimpleImputer(strategy='most_frequent')),
-        ('onehot', OneHotEncoder(handle_unknown='ignore'))
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("onehot", OneHotEncoder(handle_unknown="ignore"))
     ]
 )
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', numeric_transformer, numeric_features),
-        ('cat', categorical_transformer, categorical_features)
+        ("num", numeric_transformer, numeric_features),
+        ("cat", categorical_transformer, categorical_features)
     ]
 ) 
 
@@ -83,14 +83,14 @@ print(categorical_transformer)
 print("\n.............Model Selection using Pipeline...............")
 classifiers = [
     GaussianNB(),
-    LogisticRegression(solver='lbfgs'),
+    LogisticRegression(solver="lbfgs"),
     KNeighborsClassifier(n_neighbors=10) 
 ]
 for classifier in classifiers:
     pipe = Pipeline(
         steps=[
-            ('preprocessor', preprocessor),
-            ('classifier', classifier)
+            ("preprocessor", preprocessor),
+            ("classifier", classifier)
         ]
     )
     scores = cross_val_score(pipe, X, y, cv=5)
@@ -110,12 +110,12 @@ for classifier in classifiers:
 
 ################## Fitting Model on Test Data and Predictions #################
 #Fitting All Training Data and Predicting on Test Data
-Xtest = test_data.drop(["PassengerId", 'Name', 'Ticket', 'Cabin'], axis=1)
+Xtest = test_data.drop(["PassengerId", "Name", "Ticket", "Cabin"], axis=1)
 Id = test_data["PassengerId"]
 pipe = Pipeline(
     steps=[
-        ('preprocessor', preprocessor),
-        ('KNN_10', KNeighborsClassifier(n_neighbors=10))
+        ("preprocessor", preprocessor),
+        ("KNN_10", KNeighborsClassifier(n_neighbors=10))
     ]
 )
 pipe.fit(X, y)
@@ -127,5 +127,5 @@ id_pred = pd.DataFrame(
     ypred.reshape(-1, 1)), axis=1), 
     columns=["PassengerId", "Survived"]
 )
-id_pred.to_csv('output/predictions.csv', index=False)
+id_pred.to_csv("output/predictions.csv", index=False)
 

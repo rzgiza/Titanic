@@ -123,8 +123,7 @@ ypred = pipe.predict(Xtest)
 
 #Formatting predictions and creating output file
 id_pred = pd.DataFrame(
-    np.concatenate((Id.values.reshape(-1, 1), 
-    ypred.reshape(-1, 1)), axis=1), 
+    np.concatenate((Id.values.reshape(-1, 1), ypred.reshape(-1, 1)), axis=1), 
     columns=["PassengerId", "Survived"]
 )
 id_pred.to_csv("output/predictions.csv", index=False)

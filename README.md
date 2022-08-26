@@ -1,4 +1,3 @@
 # Titanic
 
-Supplementary [information]
-(https://youtu.be/A3QAqZQYLIQ):
+Supplementary [information](https://youtu.be/A3QAqZQYLIQ)
